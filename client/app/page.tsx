@@ -1,65 +1,137 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+
+export default function LandingPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute top-20 left-10 w-72 h-72 bg-lavender-500/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease:  "easeInOut",
+          }}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+        <motion.div
+          className="absolute bottom-20 right-10 w-96 h-96 bg-cyan-glow/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity:  [0.2, 0.4, 0.2],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
+        />
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
+        {/* Logo/Title */}
+        <motion.div
+          initial={{ opacity: 0, y:  -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration:  0.8 }}
+          className="mb-8"
+        >
+          <h1 className="text-7xl md:text-8xl font-quicksand font-bold text-lavender-400 mb-4 tracking-wide">
+            Apricity
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-lg md:text-xl text-white/60 font-literary italic">
+            The warmth of the sun in winter
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+        </motion.div>
+
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+          className="max-w-2xl text-xl md:text-2xl text-white/80 mb-12 leading-relaxed"
+        >
+          A sanctuary for <span className="text-lavender-400 font-semibold">poets</span>, 
+          <span className="text-cyan-glow font-semibold"> artists</span>, and 
+          <span className="text-teal-glow font-semibold"> dreamers</span>.
+          <br />
+          Share your creations with the world.
+        </motion. p>
+
+        {/* CTA Buttons */}
+        <motion. div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay:  0.6, duration: 0.8 }}
+          className="flex flex-col sm:flex-row gap-6"
+        >
+          <Link href="/signup">
+            <motion.button
+              whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(184, 164, 217, 0.6)" }}
+              whileTap={{ scale: 0.95 }}
+              className="px-10 py-4 bg-lavender-500 hover:bg-lavender-600 text-white rounded-full font-semibold text-lg transition-all duration-300 shadow-lavender-glow"
+            >
+              Begin Your Journey
+            </motion.button>
+          </Link>
+
+          <Link href="/login">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-10 py-4 bg-transparent border-2 border-lavender-400/40 hover:border-lavender-400/80 text-white rounded-full font-semibold text-lg transition-all duration-300"
+            >
+              Welcome Back
+            </motion.button>
+          </Link>
+        </motion.div>
+
+        {/* Features Preview */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 1 }}
+          className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl"
+        >
+          {[
+              { title: "Poetry", desc: "Express emotions through verse" },
+              { title: "Art", desc: "Share visual masterpieces" },
+              { title: "Stories", desc: "Craft narratives that inspire" },
+            ].map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y:  20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.2 + index * 0.2, duration: 0.6 }}
+                className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-lavender-400/40 transition-all duration-300"
+              >
+                {/* REMOVED:  <div className="text-4xl mb-3">{feature.icon}</div> */}
+                <h3 className="text-xl font-semibold text-lavender-400 mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-white/60 text-sm">{feature.desc}</p>
+              </motion.div>
+        ))}
+        </motion.div>
+      </div>
+
+      {/* Footer Note */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 1 }}
+        className="absolute bottom-8 left-0 right-0 text-center text-white/40 text-sm"
+      >
+        Made with care for creative souls ✨
+      </motion.div>
     </div>
   );
 }

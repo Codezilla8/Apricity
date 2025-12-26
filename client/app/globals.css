@@ -1,26 +1,66 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  --color-deep-night: #0a0a12;
+  --color-twilight:  #1a1a2e;
+  --color-midnight: #16213e;
+  --color-lavender-400: #b8a4d9;
+  --color-lavender-500: #9d84c4;
+  --color-lavender-600: #8470b3;
+  --color-cyan-glow: #64ffda;
+  --color-teal-glow: #4dd0e1;
+  --shadow-glow-sm: 0 0 10px rgba(100, 255, 218, 0.3);
+  --shadow-glow-md: 0 0 20px rgba(100, 255, 218, 0.4);
+  --shadow-lavender-glow: 0 0 20px rgba(184, 164, 217, 0.4);
+  /* --font-quicksand: var(--font-quicksand); no need of this line */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background:  linear-gradient(180deg, #0a0a12 0%, #1a1a2e 100%);
+  color: rgba(255, 255, 255, 0.9);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform:  translateY(0);
+    opacity: 1;
+  }
 }
