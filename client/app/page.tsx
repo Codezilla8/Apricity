@@ -27,7 +27,7 @@ export default function LandingPage() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration:  0.8 }}
+          transition={{ duration:  1.1 }}
           className="mb-8"
         >
           <h1 className="text-7xl md:text-8xl font-quicksand font-bold text-white mb-4 tracking-wide drop-shadow-lg">
@@ -39,7 +39,7 @@ export default function LandingPage() {
         </motion.div>
 
         {/* Tagline */}
-        <motion. p
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
@@ -50,10 +50,10 @@ export default function LandingPage() {
           <span className="text-cyan-300 font-semibold"> dreamers</span>.
           <br />
           Share your creations with the world.
-        </motion. p>
+        </motion.p>
 
         {/* CTA Buttons */}
-        <motion. div
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8 }}
