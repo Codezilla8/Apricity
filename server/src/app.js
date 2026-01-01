@@ -1,6 +1,52 @@
 import express from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 
-const app = express();
+const app = express();//app instance
+
+//middlewares
+//cors setup
+app.use(cors({
+    origin: process.env.CORS_ORIGIN || '*',
+    credentials: true,
+}))
+
+app.use(express.json({
+    limit: '50mb'
+}))
+
+app.use(express.urlencoded({
+    limit: '50mb',
+    extended: true,
+}))
+
+app.use(cookieParser())
+
+app.use(express.static('public'))
+app.use((req, _, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+})
+
+
+//routes
+import { userRouter } from './routes/user.routes';
+import { authRouter } from './routes/auth.routes';
+
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/users', userRouter);
+
+
+
+//error handler for 404 route not found
+app.use((req, res, next) => {
+    console.warn(`404 Not Found: ${req.method} ${req.url}`)
+    res.status(404).json({
+        success: false,
+        message: "Route not found"
+    })
+})//next() not called as this is a terminal middleware for handling 404 errors
+
 
 export default app;
