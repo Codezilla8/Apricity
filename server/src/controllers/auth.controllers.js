@@ -9,8 +9,8 @@ export const signupUser = asyncHandler(async (req, res) => {
     const { username, 
             email, 
             password, 
-            dob: dateOfBirth, 
-            favColor: favoriteColor } = req.body;
+            dateOfBirth: dob, 
+            favoriteColor } = req.body;
 
     if (
         [email, username, password].some((field) => field?.trim() === "")
@@ -18,9 +18,7 @@ export const signupUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All fields are required")
     }
 
-    if (
-        !(dateOfBirth && favoriteColor)
-    ) {
+    if (!(dob && favoriteColor)) {
         throw new ApiError(400, "All fields are required")
     }
 
@@ -37,7 +35,7 @@ export const signupUser = asyncHandler(async (req, res) => {
         email, 
         password,
         username: username.toLowerCase(),
-        dateOfBirth,
+        dob,
         favoriteColor,
     })
 
