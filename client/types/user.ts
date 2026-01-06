@@ -3,6 +3,7 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  dateOfBirth: string;
   selectedColor: string;
   bio?:  string;
   avatar?: string;
@@ -15,6 +16,7 @@ export interface SignupData {
   email: string;
   password: string;
   confirmPassword: string;
+  dateOfBirth: string;
   selectedColor: string;
 }
 

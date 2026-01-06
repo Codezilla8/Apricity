@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import { errorHandler } from './utils/errorHandler.js';
 
 
 const app = express();//app instance
@@ -31,8 +32,8 @@ app.use((req, _, next) => {
 
 
 //routes
-import { userRouter } from './routes/user.routes';
-import { authRouter } from './routes/auth.routes';
+import { userRouter } from './routes/user.routes.js';
+import { authRouter } from './routes/auth.routes.js';
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
@@ -47,6 +48,9 @@ app.use((req, res, next) => {
         message: "Route not found"
     })
 })//next() not called as this is a terminal middleware for handling 404 errors
+
+//global error handler
+app.use(errorHandler);
 
 
 export default app;

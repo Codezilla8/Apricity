@@ -16,6 +16,7 @@ export default function SignupForm() {
     email: '',
     password: '',
     confirmPassword: '',
+    dateOfBirth: '',
     selectedColor: '',
   });
   const [errors, setErrors] = useState<Partial<Record<keyof SignupData, string>>>({});
@@ -25,7 +26,7 @@ export default function SignupForm() {
     const newErrors: Partial<Record<keyof SignupData, string>> = {};
 
     // Username validation
-    if (!formData. username.trim()) {
+    if (!formData.username.trim()) {
       newErrors.username = 'Username is required';
     } else if (formData.username.length < 3) {
       newErrors.username = 'Username must be at least 3 characters';
@@ -54,6 +55,33 @@ export default function SignupForm() {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
+    // Date of birth validation
+    if (!formData.dateOfBirth) {
+    newErrors.dateOfBirth = 'Date of birth is required';
+  } else {
+    // Validate age (must be 13+ for most platforms)
+    const dob = new Date(formData. dateOfBirth);
+    const today = new Date();
+    const age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    
+    // Adjust age if birthday hasn't occurred this year
+    const actualAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())
+      ? age - 1
+      : age;
+
+    if (actualAge < 13) {
+      newErrors.dateOfBirth = 'You must be at least 13 years old';
+    } else if (actualAge > 120) {
+      newErrors.dateOfBirth = 'Please enter a valid date of birth';
+    }
+
+    // Check if date is in the future
+    if (dob > today) {
+      newErrors.dateOfBirth = 'Date of birth cannot be in the future';
+    }
+  }
+
     // Color selection validation
     if (!formData. selectedColor) {
       newErrors.selectedColor = 'Please choose a theme color';
@@ -71,26 +99,28 @@ export default function SignupForm() {
 
     setIsLoading(true);
 
-    // Simulate API call (replace with actual API later)
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // // Simulate API call (replace with actual API later)
+    // await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    // Mock successful signup - store in localStorage for now
-    const mockUser = {
-      id: Date.now().toString(),
-      username: formData.username,
-      email: formData.email,
-      selectedColor: formData.selectedColor,
-      createdAt: new Date().toISOString(),
-    };
+    // // Mock successful signup - store in localStorage for now
+    // const mockUser = {
+    //   id: Date.now().toString(),
+    //   username: formData.username,
+    //   email: formData.email,
+    //   dateOfBirth: formData.dateOfBirth,
+    //   selectedColor: formData.selectedColor,
+    //   createdAt: new Date().toISOString(),
+    // };
 
-    localStorage.setItem('apricityUser', JSON.stringify(mockUser));
-    localStorage.setItem('apricityToken', 'mock-token-' + Date.now());
+    // localStorage.setItem('apricityUser', JSON.stringify(mockUser));
+    // localStorage.setItem('apricityToken', 'mock-token-' + Date.now());
 
     setIsLoading(false);
 
     // Redirect to feed (we'll create this later)
     // For now, redirect to landing page with success message
-    router.push('/? signup=success');
+    // router.push('/? signup=success');
+    router.push('/feed');
   };
 
   // Update form field
@@ -112,7 +142,7 @@ export default function SignupForm() {
     >
       {/* Username */}
       <Input
-        label="Username"
+        label="Nomen"
         type="text"
         placeholder="your_username"
         value={formData.username}
@@ -139,6 +169,20 @@ export default function SignupForm() {
           </svg>
         }
       />
+
+    {/* Date of Birth */}
+    <Input
+      label="Date of Birth"
+      type="date"
+      value={formData.dateOfBirth}
+      onChange={(e) => updateField('dateOfBirth', e.target.value)}
+      error={errors.dateOfBirth}
+      icon={
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      }
+    />
 
       {/* Password */}
       <Input
