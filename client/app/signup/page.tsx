@@ -75,7 +75,7 @@ export default function SignupPage() {
           </div>
         </motion.div>
 
-        {/* Footer Note */}
+        {/* Footer Note
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -83,7 +83,7 @@ export default function SignupPage() {
           className="mt-8 text-white/40 text-xs text-center"
         >
           By signing up, you agree to our Terms of Service and Privacy Policy
-        </motion.p>
+        </motion.p> */}
       </div>
     </div>
   );

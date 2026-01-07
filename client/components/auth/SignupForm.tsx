@@ -92,35 +92,46 @@ export default function SignupForm() {
   };
 
   // Handle form submission
-  const handleSubmit = async (e: React. FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) return;
 
     setIsLoading(true);
 
-    // // Simulate API call (replace with actual API later)
-    // await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      // Call backend API
+      const response = await fetch('http://localhost:8000/api/v1/auth/signup', {
+        method:  'POST',
+        headers:  {
+          'Content-Type':  'application/json',
+        },
+        credentials: 'include', // Important:  allows cookies
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+          dateOfBirth: formData. dateOfBirth,
+          selectedColor: formData.selectedColor,
+        }),
+      });
 
-    // // Mock successful signup - store in localStorage for now
-    // const mockUser = {
-    //   id: Date.now().toString(),
-    //   username: formData.username,
-    //   email: formData.email,
-    //   dateOfBirth: formData.dateOfBirth,
-    //   selectedColor: formData.selectedColor,
-    //   createdAt: new Date().toISOString(),
-    // };
+      const data = await response.json();
 
-    // localStorage.setItem('apricityUser', JSON.stringify(mockUser));
-    // localStorage.setItem('apricityToken', 'mock-token-' + Date.now());
-
-    setIsLoading(false);
-
-    // Redirect to feed (we'll create this later)
-    // For now, redirect to landing page with success message
-    // router.push('/? signup=success');
-    router.push('/feed');
+      if (data.success) {
+        // Success! Backend set auth cookies
+        console.log('Signup successful:', data);
+        router.push('/feed');
+      } else {
+        // Show backend error
+        alert(data.message || 'Signup failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      alert('Network error. Please check your connection.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Update form field

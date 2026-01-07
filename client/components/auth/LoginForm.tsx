@@ -46,30 +46,37 @@ export default function LoginForm() {
 
     setIsLoading(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      // Call backend API
+      const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', 
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-    // Mock login - check if user exists in localStorage
-    const storedUser = localStorage.getItem('apricityUser');
+      const data = await response.json();
 
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      
-      // Simple mock validation (just check if email matches)
-      if (user.email === formData.email) {
-        localStorage.setItem('apricityToken', 'mock-token-' + Date.now());
-        setIsLoading(false);
-        router.push('/?login=success');
+      if (data.success) {
+        // Success!  Backend set auth cookies
+        console.log('Login successful:', data);
+        router.push('/feed');
       } else {
-        setGeneralError('Invalid email or password');
-        setIsLoading(false);
+        // Show backend error
+        setGeneralError(data.message || 'Invalid email or password');
       }
-    } else {
-      setGeneralError('No account found.  Please sign up first.');
+    } catch (error) {
+      console.error('Login error:', error);
+      setGeneralError('Network error. Please check your connection.');
+    } finally {
       setIsLoading(false);
     }
   };
-
   // Update form field
   const updateField = (field:  keyof LoginData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -147,6 +154,6 @@ export default function LoginForm() {
           Create an account
         </a>
       </p>
-    </motion. form>
+    </motion.form>
   );
 }

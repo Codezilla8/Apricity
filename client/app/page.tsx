@@ -115,7 +115,7 @@ export default function LandingPage() {
         transition={{ delay: 1.5, duration: 1 }}
         className="absolute bottom-8 left-0 right-0 text-center text-white/50 text-sm z-10"
       >
-        Made with care for creative souls ✨
+        Made for creative souls ❤️
       </motion.div>
     </div>
   );
