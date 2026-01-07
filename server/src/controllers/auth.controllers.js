@@ -1,7 +1,7 @@
-import User from "../models/user.model.js";
-import asyncHandler from "../utils/asyncHandler.js";
-import ApiError from "../utils/apiError.js";
-import ApiResponse from "../utils/apiResponse.js";
+import { User } from "../models/user.model.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/apiError.js";
+import { ApiResponse } from "../utils/apiResponse.js";
 import jwt from "jsonwebtoken";
 
 
@@ -29,7 +29,7 @@ export const signupUser = asyncHandler(async (req, res) => {
     const { username, 
             email, 
             password, 
-            dateOfBirth: dob, 
+            dateOfBirth, 
             selectedColor } = req.body;
 
     if (
@@ -38,7 +38,7 @@ export const signupUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All fields are required")
     }
 
-    if (!(dob && selectedColor)) {
+    if (!(dateOfBirth && selectedColor)) {
         throw new ApiError(400, "All fields are required")
     }
 
@@ -55,7 +55,7 @@ export const signupUser = asyncHandler(async (req, res) => {
         email, 
         password,
         username: username.toLowerCase(),
-        dob,
+        dateOfBirth,
         selectedColor,
     })
 
