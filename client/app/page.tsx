@@ -63,7 +63,7 @@ export default function LandingPage() {
             <motion.button
               whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(138, 43, 226, 0.6)" }}
               whileTap={{ scale: 0.95 }}
-              className="px-10 py-4 bg-purple-600 hover:bg-purple-700 text-white rounded-full font-semibold text-lg transition-all duration-300 shadow-lg"
+              className="px-10 py-4 bg-white hover:bg-yellow-50 text-black rounded-full font-semibold text-lg transition-all duration-300 shadow-lg"
             >
               Begin Your Journey
             </motion.button>

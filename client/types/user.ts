@@ -23,6 +23,7 @@ export interface SignupData {
 // Login form data
 export interface LoginData {
   email: string;
+  username: string;
   password: string;
 }
 
