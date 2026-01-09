@@ -24,9 +24,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    selectedColor: {
+    // selectedColor: {
+    //     type: String,
+    //     required: true
+    // },
+    profilePicture: {
+        type: String,//cloudinary url
+        required: true,
+    },
+    description: {
         type: String,
-        required: true
+        maxlength: 300,
+        required: true,
     },
     refreshToken: {
         type: String,

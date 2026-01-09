@@ -420,10 +420,41 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { mockPosts } from '@/lib/mockData';
 import Avatar from '@/components/ui/Avatar';
-import Image from 'next/image';
+import { useState, useEffect } from 'react';
+import { url } from 'inspector';
 
 export default function LandingPage() {
   const featuredPosts = mockPosts.slice(0, 2);
+
+  const heroImages =[
+    {
+      url: '/images/hero-sunset.jpg',
+      quote: `"In the warmth of winter,\nI found your smile..."`,
+    },
+    {
+      url: '/images/hero-2.jpg',
+      quote: '"Words bloom like flowers\nin the garden of your heart..."'
+    },
+    {
+      url: '/images/hero-3.jpg',
+      quote: '"Every sunset is a promise\nof a new beginning..."'
+    },
+    {
+      url: '/images/hero-4.jpg',
+      quote: '"The eyes are the windows of the soul."'
+    },
+    {
+      url: '/images/hero-5.jpg',
+      quote: '"In the quiet moments,\nI hear the loudest truths..."'
+    }
+  ]
+
+  const [randomHero, setRandomHero] = useState(heroImages[0]);
+
+  useEffect(() => {
+    const random = heroImages[Math.floor(Math.random() * heroImages.length)];
+    setRandomHero(random);
+  }, []); // Runs once on mount (client-side only)
 
   return (
     <div className="min-h-screen bg-white">
@@ -489,13 +520,12 @@ export default function LandingPage() {
             </motion.div>
           </div>
 
-          {/* Right: Beautiful sunset image with text overlay - ✅ FIXED */}
+          {/* Right: Hero Section Image */}
           <div className="hidden md:block">
             <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-              {/* Your sunset image */}
               <img
-                src="/images/hero-sunset.jpg"
-                alt="Sunset warmth"
+                src={randomHero.url}
+                alt=""
                 className="w-full h-[400px] object-cover"
               />
               
@@ -505,8 +535,7 @@ export default function LandingPage() {
               {/* Text overlay at bottom */}
               <div className="absolute bottom-0 left-0 right-0 p-8 text-center">
                 <p className="text-white italic font-lora text-xl leading-relaxed drop-shadow-lg">
-                  "In the warmth of winter,<br />
-                  I found your smile..."
+                  {randomHero.quote}
                 </p>
               </div>
             </div>
