@@ -20,9 +20,9 @@ export default function FilterTabs({ activeFilter, onFilterChange }: FilterTabsP
     <div className="bg-white border-b border-gray-200 sticky top-[60px] z-40">
       <div className="max-w-4xl mx-auto px-6">
         <div className="flex gap-2 overflow-x-auto py-3">
-          {tabs. map((tab) => (
+          {tabs.map((tab) => (
             <button
-              key={tab. value}
+              key={tab.value}
               onClick={() => onFilterChange(tab.value)}
               className={`
                 px-4 py-2 rounded-full font-medium text-sm whitespace-nowrap transition-colors

@@ -34,8 +34,12 @@ const userSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        maxlength: 300,
+        maxlength: 150,
         required: true,
+    },
+    profileComplete: {
+        type: Boolean,
+        default: false,
     },
     refreshToken: {
         type: String,

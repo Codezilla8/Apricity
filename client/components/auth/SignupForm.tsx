@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
-import ColorPicker from '@/components/ui/ColorPicker';
 import { SignupData } from '@/types/user';
 
 export default function SignupForm() {
@@ -226,11 +225,11 @@ export default function SignupForm() {
       />
 
       {/* Color Picker */}
-      <ColorPicker
+      {/* <ColorPicker
         selectedColor={formData.selectedColor}
         onColorSelect={(color) => updateField('selectedColor', color)}
         error={errors.selectedColor}
-      />
+      /> */}
 
       {/* Submit Button */}
       <Button type="submit" variant="primary" fullWidth isLoading={isLoading}>

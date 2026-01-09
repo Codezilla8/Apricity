@@ -28,3 +28,11 @@ export const verifyJWT = asyncHandler(async(req, _, next) => {
     }
     
 })
+
+
+export const checkUserProfileComplete = asyncHandler(async(req, _, next) => {
+    if(!req.user?.profileComplete){
+        throw new ApiError(403, "Please complete your profile to access this resource")
+    }
+    next();
+});

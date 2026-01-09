@@ -182,9 +182,17 @@ export default function SignupPage() {
       const data = await response.json();
 
       if (data.success) {
-        console.log('✅ Signup successful:', data);
-        router.push('/feed');
-      } else {
+  console.log('✅ Signup successful:', data);
+  
+  // Store username temporarily for profile completion
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('tempUsername', formData.username);
+  }
+  
+  // Redirect to profile completion (MANDATORY)
+  router.push('/complete-profile');  // ✅ Add this
+}
+      else {
         alert(data.message || 'Signup failed.  Please try again.');
       }
     } catch (error) {
