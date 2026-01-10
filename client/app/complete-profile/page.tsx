@@ -75,7 +75,7 @@ export default function CompleteProfilePage() {
     setIsSubmitting(true);
 
     try {
-      // ✅ Send to backend
+      // Send to backend
       const formData = new FormData();
       formData.append('bio', bio. trim());
       if (avatarFile) {
@@ -102,7 +102,7 @@ export default function CompleteProfilePage() {
         setError(data.message || 'Failed to complete profile');
       }
     } catch (error) {
-      console.error('❌ Profile completion error:', error);
+      console.error('Profile completion error:', error);
       setError('Network error. Please try again.');
     } finally {
       setIsSubmitting(false);

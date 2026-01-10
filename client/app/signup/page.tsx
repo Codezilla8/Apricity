@@ -156,52 +156,114 @@ export default function SignupPage() {
   };
 
   // Handle form submission
+  // const handleSubmit = async (e: React. FormEvent) => {
+  //   e.preventDefault();
+
+  //   if (!validateForm()) return;
+
+  //   setIsLoading(true);
+
+  //   try {
+  //     // 🚧 MOCK DATA - Replace with real API call
+  //     const response = await fetch('http://localhost:8000/api/v1/auth/signup', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       credentials: 'include',
+  //       body: JSON.stringify({
+  //         username: formData.username,
+  //         email: formData.email,
+  //         password: formData.password,
+  //         dateOfBirth: formData.dateOfBirth,
+  //       }),
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (data.success) {
+  //       console.log('Signup successful:', data);
+  
+  //       // Store username temporarily for profile completion
+  //       if (typeof window !== 'undefined') {
+  //       localStorage.setItem('tempUsername', formData.username);
+  //       }
+  
+  //     // Redirect to profile completion 
+  //     router.push('/complete-profile');  // Add this
+  //     }
+  //     else {
+  //       alert(data.message || 'Signup failed.  Please try again.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Signup error:', error);
+  //     alert('Network error. Please check your connection.');
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const handleSubmit = async (e: React. FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
+  if (!validateForm()) return;
 
-    if (!validateForm()) return;
+  setIsLoading(true);
+  setErrors({});
 
-    setIsLoading(true);
+  try {
+    const response = await fetch('http://localhost:8000/api/v1/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        dateOfBirth: formData. dateOfBirth,
+      }),
+    });
 
-    try {
-      // 🚧 MOCK DATA - Replace with real API call
-      const response = await fetch('http://localhost:8000/api/v1/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          dateOfBirth: formData.dateOfBirth,
-        }),
-      });
+    const data = await response.json();
 
-      const data = await response.json();
-
-      if (data.success) {
-  console.log('✅ Signup successful:', data);
-  
-  // Store username temporarily for profile completion
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('tempUsername', formData.username);
-  }
-  
-  // Redirect to profile completion (MANDATORY)
-  router.push('/complete-profile');  // ✅ Add this
-}
-      else {
-        alert(data.message || 'Signup failed.  Please try again.');
+    if (data.success) {
+      // NEW USER CREATED
+      console.log('Signup successful');
+      
+      // Store username for profile completion
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('tempUsername', formData.username);
       }
-    } catch (error) {
-      console.error('❌ Signup error:', error);
-      alert('Network error. Please check your connection.');
-    } finally {
-      setIsLoading(false);
+      
+      // Redirect to profile completion
+      router.push('/complete-profile');
+      
+    } else {
+      //ERROR OCCURRED
+      
+      if (data.message?.includes('ACCOUNT_EXISTS')) {
+        //USER ALREADY EXISTS → Redirect to login
+        setErrors({
+          email: "Account already exists.  Redirecting to login..."
+        });
+        
+        // Auto-redirect after 2 seconds
+        setTimeout(() => {
+          router.push('/login');
+        }, 2000);
+        
+      } else {
+        // Other errors (validation, etc.)
+        alert(data.message || 'Signup failed. Please try again.');
+      }
     }
-  };
+    
+  } catch (error) {
+    console.error('Signup error:', error);
+    alert('Network error. Please check your connection.');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   // Update form field
   const updateField = (field: string, value: string) => {
@@ -300,5 +362,5 @@ export default function SignupPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

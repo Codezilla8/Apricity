@@ -117,43 +117,59 @@ export default function LoginPage() {
   };
 
   // Handle form submission
-  const handleSubmit = async (e:  React.FormEvent) => {
-    e.preventDefault();
-    setGeneralError('');
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!validateForm()) return;
 
-    if (!validateForm()) return;
+  setIsLoading(true);
+  setGeneralError('');
 
-    setIsLoading(true);
+  try {
+    const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: formData.email,
+        password: formData.password,
+      }),
+    });
 
-    try {
-      // 🚧 MOCK DATA - Replace with real API call
-      const response = await fetch('http://localhost:8000/api/v1/auth/login', {
-        method:  'POST',
-        headers:  {
-          'Content-Type':  'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          email: formData. email,
-          password: formData.password,
-        }),
-      });
+    const data = await response.json();
 
-      const data = await response.json();
-
-      if (data.success) {
-        console.log('✅ Login successful:', data);
-        router.push('/feed');
+    if (data.success) {
+      // LOGIN SUCCESSFUL
+      console.log('Login successful');
+      
+      //CHECK PROFILE COMPLETION
+      if (data.data.profileComplete === false) {
+        // Profile NOT complete → Redirect to complete it
+        console.log('Profile incomplete, redirecting.. .');
+        
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('tempUsername', data.data.user.username);
+        }
+        
+        router. push('/complete-profile');
+        
       } else {
-        setGeneralError(data.message || 'Invalid email or password');
+        // Profile complete → Go to feed
+        console.log('Profile complete, going to feed');
+        router.push('/feed');
       }
-    } catch (error) {
-      console.error('❌ Login error:', error);
-      setGeneralError('Network error. Please check your connection.');
-    } finally {
-      setIsLoading(false);
+      
+    } else {
+      //LOGIN FAILED
+      setGeneralError(data. message || 'Invalid email or password');
     }
-  };
+    
+  } catch (error) {
+    console.error('Login error:', error);
+    setGeneralError('Network error. Please check your connection.');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   // Update form field
   const updateField = (field: string, value: string) => {

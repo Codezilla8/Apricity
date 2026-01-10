@@ -30,16 +30,22 @@ const userSchema = new mongoose.Schema({
     // },
     profilePicture: {
         type: String,//cloudinary url
-        required: true,
+        // required: true,
+        default: null
     },
     description: {
         type: String,
         maxlength: 150,
-        required: true,
+        default: null,
+        // required: true,
     },
     profileComplete: {
         type: Boolean,
         default: false,
+    },
+    googleId: {
+        type: String,
+        default: null,
     },
     refreshToken: {
         type: String,

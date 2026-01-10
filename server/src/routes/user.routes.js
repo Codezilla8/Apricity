@@ -8,7 +8,7 @@ const userRouter = Router();
 //secured routes
 
 // Complete profile (after signup)
-userRouter.route("/complete-profile").post(
+userRouter.route("/complete-profile").post(//url: /api/v1/users/complete-profile
     verifyJWT,
     upload.single("avatar"), // Handle file upload
     completeProfile

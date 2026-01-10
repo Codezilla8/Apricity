@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Crimson_Text, Lora, Quicksand } from "next/font/google";
 import "./globals.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 // Font configurations
 const inter = Inter({
@@ -46,7 +47,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${crimson.variable} ${lora.variable} ${quicksand.variable} antialiased`}
       >
-        {children}
+        <GoogleOAuthProvider clientId="819575173504-iedtblp3pkubo7sqec88cs75912qjb47.apps.googleusercontent.com">
+          {children}
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

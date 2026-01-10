@@ -8,10 +8,30 @@ const app = express();//app instance
 
 //middlewares
 //cors setup
-app.use(cors({
-    origin: process.env.CORS_ORIGIN || '*',
+// app.use(cors({
+//     origin: process.env.CORS_ORIGIN,
+//     credentials: true,
+// }))
+
+// app.use(cors({
+//     origin: 'http://localhost:3000',
+//     credentials: true,
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+//     exposedHeaders: ['set-cookie'],
+// }))
+
+const corsOptions = {
+    origin: 'http://localhost:3000',
     credentials: true,
-}))
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+    exposedHeaders: ['set-cookie'],
+    maxAge:  86400, // Cache preflight for 24 hours
+};
+
+
+app.use(cors(corsOptions));
 
 app.use(express.json({
     limit: '50mb'

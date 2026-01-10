@@ -421,7 +421,6 @@ import { motion } from 'framer-motion';
 import { mockPosts } from '@/lib/mockData';
 import Avatar from '@/components/ui/Avatar';
 import { useState, useEffect } from 'react';
-import { url } from 'inspector';
 
 export default function LandingPage() {
   const featuredPosts = mockPosts.slice(0, 2);
@@ -454,7 +453,7 @@ export default function LandingPage() {
   useEffect(() => {
     const random = heroImages[Math.floor(Math.random() * heroImages.length)];
     setRandomHero(random);
-  }, []); // Runs once on mount (client-side only)
+  }, []); // Runs once on mount
 
   return (
     <div className="min-h-screen bg-white">
@@ -529,7 +528,6 @@ export default function LandingPage() {
                 className="w-full h-[400px] object-cover"
               />
               
-              {/* Dark overlay for text readability */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
               
               {/* Text overlay at bottom */}

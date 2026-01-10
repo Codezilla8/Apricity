@@ -1,8 +1,8 @@
-import { User } from "../models/user. model.js";
+import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { uploadOnCloudinary } from "../config/cloudinary.js";
 
 // Complete user profile
 export const completeProfile = asyncHandler(async (req, res) => {
@@ -16,28 +16,33 @@ export const completeProfile = asyncHandler(async (req, res) => {
     if (bio.trim().length > 150) {
         throw new ApiError(400, "Bio must not exceed 150 characters");
     }
+    console.log('bio:', bio);
 
     // Get current user (from auth middleware)
     const user = await User.findById(req.user._id);
+    
 
     if (!user) {
         throw new ApiError(404, "User not found");
     }
+    console.log('user:', user);
 
     // Update bio
-    user.description = bio. trim();
+    user.description = bio.trim();
 
     // Handle avatar upload if provided
     if (req.file) {
         // Upload to Cloudinary
         const avatarLocalPath = req.file.path;
+        console.log('avatarLocalPath:', avatarLocalPath);
         const avatar = await uploadOnCloudinary(avatarLocalPath);
 
         if (!avatar) {
             throw new ApiError(500, "Failed to upload avatar");
         }
 
-        user.profilePicture = avatar. url;
+        user.profilePicture = avatar.url;
+        console.log('Uploaded avatar URL:', avatar.url);
     }
 
     // Mark profile as complete
