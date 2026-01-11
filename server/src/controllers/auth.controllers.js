@@ -251,7 +251,7 @@ export const googleAuth = asyncHandler(async (req, res) => {
     }
 
     try {
-        // ✅ Verify the Google token
+        //Verify the Google token
         const ticket = await client. verifyIdToken({
             idToken: credential,
             audience: process.env. GOOGLE_CLIENT_ID,
@@ -259,19 +259,19 @@ export const googleAuth = asyncHandler(async (req, res) => {
 
         const payload = ticket.getPayload();
         
-        console.log('📧 Google user:', payload.email);
+        console.log('Google user:', payload.email);
 
         // Extract user info from Google
         const { email, name, picture, sub:  googleId } = payload;
 
-        // ✅ Check if user exists
+        //Check if user exists
         let user = await User.findOne({ email });
 
         if (user) {
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             // 👤 USER EXISTS - Login
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            console.log('✅ Existing user, logging in');
+            console.log('Existing user, logging in');
 
             // Generate tokens
             const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id);
