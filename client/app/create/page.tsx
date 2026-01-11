@@ -14,7 +14,9 @@ export default function CreatePostPage() {
   const [selectedType, setSelectedType] = useState<PostType | null>(null);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [image, setImage] = useState<string | null>(null);
+  // const [image, setImage] = useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [caption, setCaption] = useState('');
   const [isPublishing, setIsPublishing] = useState(false);
 
@@ -27,7 +29,7 @@ export default function CreatePostPage() {
     }
     
     if (selectedType === 'painting' || selectedType === 'photograph') {
-      return image !== null;
+      return imageFile !== null;
     }
     
     return false;
@@ -41,23 +43,55 @@ export default function CreatePostPage() {
 
     try {
       // 🚧 MOCK DATA - Replace with real API call
-      const postData = {
-        type: selectedType,
-        title:  title || undefined,
-        content: selectedType === 'poetry' || selectedType === 'story' ?  content : caption,
-        image: selectedType === 'painting' || selectedType === 'photograph' ? image : undefined,
-      };
+      // const postData = {
+      //   type: selectedType,
+      //   title:  title || undefined,
+      //   content: selectedType === 'poetry' || selectedType === 'story' ?  content : caption,
+      //   image: selectedType === 'painting' || selectedType === 'photograph' ? image : undefined,
+      // };
 
-      console.log('📝 Publishing post:', postData);
+      // console.log('📝 Publishing post:', postData);
 
-      // Mock API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // // Mock API call
+      // await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Redirect to feed
-      alert('Post published successfully!  ✨');
-      router.push('/feed');
+      // // Redirect to feed
+      // alert('Post published successfully!  ✨');
+      // router.push('/feed');
+      
+    const formData = new FormData();
+
+    formData.append("type", selectedType!);
+
+    if (title.trim()) {
+      formData.append("title", title);
+    }
+
+    if (selectedType === "poetry" || selectedType === "story") {
+      formData.append("content", content);
+    } else {
+      formData.append("content", caption);
+    }
+
+    if (imageFile instanceof File) {
+      formData.append("image", imageFile);
+    }
+
+    const response = await fetch("http://localhost:8000/api/v1/posts", {
+      method: "POST",
+      body: formData,
+      credentials: "include", // 🔥 REQUIRED (cookies)
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to create post");
+    }
+
+    router.push("/feed");
+
     } catch (error) {
-      console.error('❌ Error publishing post:', error);
+      console.error('Error publishing post:', error);
       alert('Failed to publish post. Please try again.');
     } finally {
       setIsPublishing(false);
@@ -116,12 +150,21 @@ export default function CreatePostPage() {
               )}
 
               {(selectedType === 'painting' || selectedType === 'photograph') && (
+                // <ImageUploader
+                //   image={image}
+                //   caption={caption}
+                //   onImageChange={setImage}
+                //   onCaptionChange={setCaption}
+                // />
                 <ImageUploader
-                  image={image}
+                  imageFile={imageFile}
+                  imagePreview={imagePreview}
                   caption={caption}
-                  onImageChange={setImage}
+                  onImageChange={setImageFile}
+                  onPreviewChange={setImagePreview}
                   onCaptionChange={setCaption}
-                />
+/>
+
               )}
             </>
           )}

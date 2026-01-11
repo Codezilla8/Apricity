@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getFeed, createPost, deletePost } from "../controllers/feed.controller.js";
+import { getFeed } from "../controllers/feed.controller.js";
 import { verifyJWT, checkUserProfileComplete } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
@@ -9,12 +9,11 @@ const feedRouter = Router();
 feedRouter.use(verifyJWT, checkUserProfileComplete);
 
 // Get feed
-feedRouter.route("/")
-    .get(getFeed)
-    .post(upload.single("image"), createPost);
+feedRouter.route("/").get(getFeed)
+    // .post(upload.single("image"), createPost);
 
 // Delete post
-feedRouter.route("/:postId")
-    .delete(deletePost);
+// feedRouter.route("/:postId")
+//     .delete(deletePost);
 
 export { feedRouter };

@@ -2,19 +2,31 @@
 
 import { useState } from 'react';
 
+// interface ImageUploaderProps {
+//   image:  string | null;
+//   caption:  string;
+//   onImageChange: (imageUrl: string) => void;
+//   onCaptionChange: (value: string) => void;
+// }
+
 interface ImageUploaderProps {
-  image:  string | null;
-  caption:  string;
-  onImageChange: (imageUrl: string) => void;
+  imageFile: File | null;
+  imagePreview: string | null;
+  caption: string;
+  onImageChange: (file: File | null) => void;
+  onPreviewChange: (preview: string | null) => void;
   onCaptionChange: (value: string) => void;
 }
 
+
 export default function ImageUploader({
-  image,
+  imageFile,
+  imagePreview,
   caption,
   onImageChange,
+  onPreviewChange,
   onCaptionChange,
-}:  ImageUploaderProps) {
+}: ImageUploaderProps){
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -26,37 +38,69 @@ export default function ImageUploader({
     setIsDragging(false);
   };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
+  // const handleDrop = (e: React.DragEvent) => {
+  //   e.preventDefault();
+  //   setIsDragging(false);
     
-    // 🚧 MOCK - In production, upload the file
-    const files = e.dataTransfer.files;
-    if (files. length > 0) {
-      console.log('File dropped:', files[0].name);
-      // Mock:  Use a placeholder URL
-      onImageChange('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800');
-    }
-  };
+  //   // 🚧 MOCK - In production, upload the file
+  //   const files = e.dataTransfer.files;
+  //   if (files. length > 0) {
+  //     console.log('File dropped:', files[0].name);
+  //     // Mock:  Use a placeholder URL
+  //     onImageChange('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800');
+  //   }
+  // };
+
+  const handleDrop = (e: React.DragEvent) => {
+  e.preventDefault();
+  setIsDragging(false);
+
+  const file = e.dataTransfer.files?.[0] || null;
+
+  onImageChange(file);
+
+  if (file) {
+    const previewUrl = URL.createObjectURL(file);
+    onPreviewChange(previewUrl);
+  } else {
+    onPreviewChange(null);
+  }
+};
+
+
+  // const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   // 🚧 MOCK - In production, upload the file
+  //   const files = e.target.files;
+  //   if (files && files.length > 0) {
+  //     console.log('File selected:', files[0].name);
+  //     // Mock: Use a placeholder URL
+  //     onImageChange('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800');
+  //   }
+  // };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // 🚧 MOCK - In production, upload the file
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      console.log('File selected:', files[0].name);
-      // Mock: Use a placeholder URL
-      onImageChange('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800');
-    }
-  };
+  const file = e.target.files?.[0] || null;
+
+  onImageChange(file);
+
+  if (file) {
+    const previewUrl = URL.createObjectURL(file);
+    onPreviewChange(previewUrl);
+  } else {
+    onPreviewChange(null);
+  }
+};
+
 
   const removeImage = () => {
-    onImageChange('');
+    onImageChange(null);
+    onPreviewChange(null);
   };
 
   return (
     <div className="space-y-4">
       {/* Image upload area */}
-      {! image ? (
+      {!imagePreview ? (
         <div
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -89,7 +133,7 @@ export default function ImageUploader({
         // Image preview
         <div className="relative">
           <img
-            src={image}
+            src={imagePreview}
             alt="Upload preview"
             className="w-full rounded-xl object-cover max-h-96"
           />
