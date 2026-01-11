@@ -79,10 +79,18 @@ export const signupUser = asyncHandler(async (req, res) => {
     const {accessToken, refreshToken} = await generateAccessAndRefereshTokens(user._id)
 
 
+    // const options = {
+    // httpOnly: true,
+    // secure:  false, //set to true in production (https)
+    // }
+ 
     const options = {
-    httpOnly: true,
-    secure:  false, //set to true in production (https)
-    }
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax',
+        path: '/',
+        maxAge:  24 * 60 * 60 * 1000
+    };
 
     // Set cookies and return response
     return res
@@ -137,7 +145,10 @@ export const loginUser = asyncHandler(async (req, res) =>{
 
     const options = {
         httpOnly: true,
-        secure: false
+        secure: false,
+        sameSite: 'lax',
+        path: '/',
+        maxAge:  24 * 60 * 60 * 1000
     }
 
     return res

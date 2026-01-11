@@ -54,9 +54,16 @@ app.use((req, _, next) => {
 //routes
 import { userRouter } from './routes/user.routes.js';
 import { authRouter } from './routes/auth.routes.js';
+import { feedRouter } from './routes/feed.routes.js';
+import { postRouter } from './routes/post.routes.js';
+import { chatRouter } from './routes/chat.routes.js';
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/feed', feedRouter);
+app.use('/api/v1/posts', postRouter);
+app.use('/api/v1/chat', chatRouter);
+
 
 
 

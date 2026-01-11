@@ -1,10 +1,15 @@
 import dotenv from 'dotenv';
 import app from './app.js';
 import dbConnect from './config/dbConnect.js';
+import { createServer } from "http";
+import { initializeSocket } from './socket/socket.js';
 
 dotenv.config({
     path: './.env',
 })
+
+const httpServer = createServer(app);
+initializeSocket(httpServer);
 
 dbConnect()
 .then(() => {
