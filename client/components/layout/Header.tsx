@@ -3,24 +3,60 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Avatar from '@/components/ui/Avatar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-interface HeaderProps {
-  currentUser?: {
-    username: string;
-    avatar?: string | null;
-  };
-}
+// interface HeaderProps {
+//   currentUser?: {
+//     username: string;
+//     avatar?: string | null;
+//   };
+// }
 
-export default function Header({ currentUser }: HeaderProps) {
+export default function Header() {
   const router = useRouter();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [user, setUser] = useState<{
+    username: string;
+    avatar?: string | null;
+  } | null>(null);
 
-  const handleLogout = () => {
-    // 🚧 MOCK - Replace with real logout
-    console.log('Logging out...');
-    router.push('/');
+
+  // const handleLogout = () => {
+  //   // 🚧 MOCK - Replace with real logout
+  //   console.log('Logging out...');
+  //   router.push('/');
+  // };
+  const handleLogout = async () => {
+    try {
+      await fetch('http://localhost:8000/api/v1/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch (err) {
+      console.error('Logout failed', err);
+    } finally {
+      router.push('/login');
+    }
   };
+
+  useEffect(() => {
+    const fetchMe = async () => {
+      try {
+        const res = await fetch('http://localhost:8000/api/v1/users/me', {
+          credentials: 'include',
+        });
+
+        if (!res.ok) return;
+
+        const data = await res.json();
+        setUser(data.data.user);
+      } catch (err) {
+        console.error('Failed to fetch user', err);
+      }
+    };
+      fetchMe();
+  }, []);
+
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
@@ -70,16 +106,24 @@ export default function Header({ currentUser }: HeaderProps) {
               onClick={() => setShowDropdown(!showDropdown)}
               className="hover:opacity-80 transition-opacity"
             >
-              <Avatar username={currentUser?.username || 'User'} avatar={currentUser?.avatar} size="sm" />
+              <Avatar username={user?.username || 'User'} avatar={user?.avatar} size="sm" />
             </button>
 
             {showDropdown && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                <Link href={`/profile/${currentUser?.username}`}>
+                {/* <Link href={`/profile/${user?.username}`}>
+                  <div className="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm text-gray-700">
+                    Profile
+                  </div>
+                </Link> */}
+                {user && (
+                <Link href={`/profile/${user.username}`}>
                   <div className="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm text-gray-700">
                     Profile
                   </div>
                 </Link>
+              )}
+
                 <div className="px-4 py-2 hover:bg-gray-50 cursor-pointer text-sm text-gray-700">
                   Settings
                 </div>

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { completeProfile, getCurrentUser } from "../controllers/user.controller.js";
+import { completeProfile, getCurrentUser, getUserProfileByUsername } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
@@ -17,4 +17,11 @@ userRouter.route("/complete-profile").post(//url: /api/v1/users/complete-profile
 // Get current user
 userRouter.route("/me").get(verifyJWT, getCurrentUser);
 
+
+//get user by username
+userRouter.route("/:username").get(getUserProfileByUsername);
+
 export { userRouter };
+
+
+

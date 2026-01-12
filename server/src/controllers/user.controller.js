@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import { Post } from "../models/post.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
@@ -75,5 +76,27 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
         new ApiResponse(200, {
             user
         }, "User fetched successfully")
+    );
+});
+
+//get user profile by username
+export const getUserProfileByUsername = asyncHandler(async (req, res) => {
+    const { username } = req.params;
+
+    const user = await User.findOne({ username })
+        .select("-password -refreshToken");
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    const posts = await Post.find({ author: user._id })
+        .sort({ createdAt: -1 });
+
+    return res.status(200).json(
+        new ApiResponse(200, {
+            user,
+            posts
+        }, "Profile fetched successfully")
     );
 });

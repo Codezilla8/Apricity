@@ -55,7 +55,7 @@ export default function PostCard({ post }: PostCardProps) {
           <div className="flex items-center gap-3 cursor-pointer hover:opacity-80">
             <Avatar 
               username={post.author.username} 
-              avatar={post.author.avatar} 
+              avatar={post.author.profilePicture} 
               size="md" 
             />
             <div>

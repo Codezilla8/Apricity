@@ -261,58 +261,131 @@
 
 
 
+// 'use client';
+
+// import Header from '@/components/layout/Header';
+// import ProfileHeader from '@/components/profile/ProfileHeader';
+// import UserPosts from '@/components/profile/UserPosts';
+
+// export default function ProfilePage({ params, }: { params: { username: string } }) {
+//   const { username } = params;
+
+//   // 🚧 MOCK DATA - Current logged-in user
+//   const currentUser = mockUsers[0];
+
+//   // 🚧 MOCK DATA - Find the profile user
+//   const profileUser = mockUsers.find(u => u.username === username);
+
+//   // 🚧 MOCK DATA - Get user's posts
+//   const userPosts = mockPosts.filter(post => post.author.username === username);
+
+//   // If user not found
+//   if (!username) {
+//     return (
+//       <div className="min-h-screen bg-gray-50">
+//         <Header/>
+//         <main className="max-w-4xl mx-auto px-6 py-20 text-center">
+//           <div className="text-6xl mb-4">🤷</div>
+//           <h1 className="text-2xl font-bold text-gray-900 mb-2">User not found</h1>
+//           <p className="text-gray-600">@{username} doesn't exist</p>
+//         </main>
+//       </div>
+//     );
+//   }
+
+//   const isOwnProfile = currentUser.username === username;
+
+//   return (
+//     <div className="min-h-screen bg-gray-50">
+//       <Header/>
+
+//       <main className="max-w-4xl mx-auto px-6 py-8 space-y-6">
+//         {/* Profile header */}
+//         <ProfileHeader
+//           username={profileUser.username}
+//           bio={profileUser.bio}
+//           postCount={profileUser. posts}
+//           avatar={profileUser.avatar}
+//           isOwnProfile={isOwnProfile}
+//         />
+
+//         {/* User's posts */}
+//         <UserPosts posts={userPosts} username={username} />
+//       </main>
+//     </div>
+//   );
+// }
+
+
 'use client';
 
-import { use } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import ProfileHeader from '@/components/profile/ProfileHeader';
 import UserPosts from '@/components/profile/UserPosts';
-import { mockUsers, mockPosts } from '@/lib/mockData';
 
-export default function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
-  const { username } = use(params);
+export default function ProfilePage() {
+  const { username } = useParams<{ username: string }>();
 
-  // 🚧 MOCK DATA - Current logged-in user
-  const currentUser = mockUsers[0];
+  const [profileUser, setProfileUser] = useState<any>(null);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // 🚧 MOCK DATA - Find the profile user
-  const profileUser = mockUsers.find(u => u.username === username);
+  useEffect(() => {
+    if (!username) return;
 
-  // 🚧 MOCK DATA - Get user's posts
-  const userPosts = mockPosts.filter(post => post.author.username === username);
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:8000/api/v1/users/${username}`,
+          { credentials: 'include' }
+        );
 
-  // If user not found
+        if (!res.ok) throw new Error("User not found");
+
+        const data = await res.json();
+        setProfileUser(data.data.user);
+        setPosts(data.data.posts);
+      } catch (err) {
+        setProfileUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [username]);
+
+  if (loading) {
+    return <div className="p-20 text-center">Loading profile…</div>;
+  }
+
   if (!profileUser) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header currentUser={currentUser} />
-        <main className="max-w-4xl mx-auto px-6 py-20 text-center">
-          <div className="text-6xl mb-4">🤷</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">User not found</h1>
-          <p className="text-gray-600">@{username} doesn't exist</p>
-        </main>
+        <Header />
+        <div className="p-20 text-center">
+          <h1 className="text-2xl font-bold">@{username} doesn’t exist</h1>
+        </div>
       </div>
     );
   }
 
-  const isOwnProfile = currentUser.username === username;
-
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header currentUser={currentUser} />
+      <Header />
 
       <main className="max-w-4xl mx-auto px-6 py-8 space-y-6">
-        {/* Profile header */}
         <ProfileHeader
           username={profileUser.username}
           bio={profileUser.bio}
-          postCount={profileUser. posts}
-          avatar={profileUser.avatar}
-          isOwnProfile={isOwnProfile}
+          postCount={posts.length}
+          avatar={profileUser.profilePicture}
+          isOwnProfile={false} // can compute later
         />
 
-        {/* User's posts */}
-        <UserPosts posts={userPosts} username={username} />
+        <UserPosts posts={posts} username={username} />
       </main>
     </div>
   );

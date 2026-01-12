@@ -20,7 +20,7 @@ export default function SearchPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header currentUser={currentUser} />
+      <Header />
 
       <main className="max-w-4xl mx-auto px-6 py-8">
         {/* Search header */}

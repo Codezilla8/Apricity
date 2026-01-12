@@ -279,9 +279,7 @@ export const googleAuth = asyncHandler(async (req, res) => {
         let user = await User.findOne({ email });
 
         if (user) {
-            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // 👤 USER EXISTS - Login
-            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            //USER EXISTS - Login
             console.log('Existing user, logging in');
 
             // Generate tokens
@@ -311,10 +309,8 @@ export const googleAuth = asyncHandler(async (req, res) => {
                 );
 
         } else {
-            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            // ✨ NEW USER - Create account
-            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-            console. log('✨ New user, creating account');
+            // NEW USER - Create account
+            console. log('New user, creating account');
 
             // Generate username from email
             const baseUsername = email.split('@')[0]. toLowerCase();

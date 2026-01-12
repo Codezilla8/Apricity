@@ -284,7 +284,7 @@ export default function FeedPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header currentUser={currentUser} />
+      <Header />
       <FilterTabs activeFilter={activeFilter} onFilterChange={setActiveFilter} />
 
       <main className="max-w-4xl mx-auto px-6 py-8">
