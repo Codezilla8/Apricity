@@ -79,24 +79,89 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
     );
 });
 
-//get user profile by username
-export const getUserProfileByUsername = asyncHandler(async (req, res) => {
-    const { username } = req.params;
+// //get user profile by username
+// export const getUserProfileByUsername = asyncHandler(async (req, res) => {
+//     const { username } = req.params;
 
-    const user = await User.findOne({ username })
-        .select("-password -refreshToken");
+//     const user = await User.findOne({ username })
+//         .select("-password -refreshToken");
 
-    if (!user) {
-        throw new ApiError(404, "User not found");
+//     if (!user) {
+//         throw new ApiError(404, "User not found");
+//     }
+
+//     const posts = await Post.find({ author: user._id })
+//         .sort({ createdAt: -1 });
+
+//     return res.status(200).json(
+//         new ApiResponse(200, {
+//             user,
+//             posts
+//         }, "Profile fetched successfully")
+//     );
+// });
+
+
+// //search users by username or name
+// export const searchUsers = asyncHandler(async (req, res) => {
+//   const { q } = req.query;
+
+//   if (!q || !q.trim()) {
+//     return res.status(200).json(
+//       new ApiResponse(200, { users: [] }, "Empty search")
+//     );
+//   }
+
+//   const users = await User.find({
+//     username: { $regex: q, $options: "i" }
+//   })
+//     .select("username profilePicture description")
+//     .limit(10);
+
+//   return res.status(200).json(
+//     new ApiResponse(200, { users }, "Users found")
+//   );
+// });
+
+
+//Search users by username
+export const searchUsers = asyncHandler(async (req, res) => {
+    const { q } = req.query;
+
+    if (!q || !q.trim()) {
+        return res.status(200).json(
+            new ApiResponse(200, { users: [] }, "Empty query")
+        );
     }
 
-    const posts = await Post.find({ author: user._id })
-        .sort({ createdAt: -1 });
+    const users = await User.aggregate([
+        {
+            $match: {
+                username: { $regex: q, $options: "i" }
+            }
+        },
+        {
+            $lookup: {
+                from: "posts",
+                localField: "_id",
+                foreignField: "author",
+                as: "posts"
+            }
+        },
+        {
+            $project: {
+                username: 1,
+                profilePicture: 1,
+                description: 1,
+                postCount: { $size: "$posts" }
+            }
+        },
+        {
+            $limit: 10
+        }
+    ]);
 
     return res.status(200).json(
-        new ApiResponse(200, {
-            user,
-            posts
-        }, "Profile fetched successfully")
+        new ApiResponse(200, { users }, "Users found")
     );
 });
